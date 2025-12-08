@@ -1,47 +1,59 @@
-# Guía de Conexión: Pantalla ILI9486 (Modo Paralelo 8-Bits)
+# Conexiones del Display ILI9486 (16-bit Paralelo)
 
-Esta guía documenta cómo conectar tu pantalla al STM32F411 (Nucleo) según la configuración actual del código (`main.h` y `ili9486.h`).
+Tabla de conexiones entre el microcontrolador STM32F411 y la pantalla LCD ILI9486.
 
-## 1. Pines de Datos (Puerto C)
-Estos pines envían los colores y comandos a la pantalla. Debes conectarlos en orden.
+## 1. Bus de Datos (16-bit)
 
-| Etiqueta Pantalla | Pin STM32 (Morpho) | Ubicación Física (CN7/CN10) |
+| Bit de Datos (DB) | Pin STM32 | Puerto |
 | :--- | :--- | :--- |
-| **D0** / DB0 | **PC0** | CN7 Pin 37 |
-| **D1** / DB1 | **PC1** | CN7 Pin 35 |
-| **D2** / DB2 | **PC2** | CN7 Pin 34 |
-| **D3** / DB3 | **PC3** | CN7 Pin 36 |
-| **D4** / DB4 | **PC4** | CN7 Pin 34 (Revisar) |
-| **D5** / DB5 | **PC5** | CN7 Pin 6 |
-| **D6** / DB6 | **PC6** | CN7 Pin 4 |
-| **D7** / DB7 | **PC7** | CN7 Pin 19 |
+| **DB0** | PB13 | GPIOB |
+| **DB1** | PC4 | GPIOC |
+| **DB2** | PA10 | GPIOA |
+| **DB3** | PB5 | GPIOB |
+| **DB4** | PB10 | GPIOB |
+| **DB5** | PA8 | GPIOA |
+| **DB6** | PA9 | GPIOA |
+| **DB7** | PC7 | GPIOC |
+| **DB8** | PC5 | GPIOC |
+| **DB9** | PC6 | GPIOC |
+| **DB10** | PC8 | GPIOC |
+| **DB11** | PC9 | GPIOC |
+| **DB12** | PA5 | GPIOA |
+| **DB13** | PA6 | GPIOA |
+| **DB14** | PA7 | GPIOA |
+| **DB15** | PB6 | GPIOB |
 
-*Nota: Busca los pines marcados como `PCx` en la placa blanca.*
+## 2. Señales de Control
 
-## 2. Pines de Control (Puerto B)
-Estos pines controlan cuándo se envían los datos.
+| Señal | Pin STM32 | Puerto | Función |
+| :--- | :--- | :--- | :--- |
+| **CS** | PB1 | GPIOB | Chip Select (Active Low) |
+| **RST** | PB2 | GPIOB | Reset (Active Low) |
+| **RS / DC** | PB14 | GPIOB | Register Select (Dat/Cmd) |
+| **WR** | PB15 | GPIOB | Write Strobe (Active Low) |
+| **RD** | - | - | Read Strobe (3.3V fijo) |
 
-| Etiqueta Pantalla | Función | Pin STM32 |
+## 3. Otros
+
+| Señal | Pin STM32 | Descripción |
 | :--- | :--- | :--- |
-| **RS** / DC | Comando/Dato | **PB0** |
-| **WR** | Escritura (Write) | **PB1** |
-| **CS** | Chip Select | **PB2** |
-| **RST** / RESET | Reset | **PB10** |
-| **RD** | Lectura | **3.3V** (Opcional) |
+| **LED** | 3.3V | Retroiluminación (Directo a VCC) |
+| **VCC** | 5V / 3.3V| Alimentación Lógica |
+| **GND** | GND | Tierra |
 
-## 3. Sensores
+## 4. Otros Periféricos
 
-### Acelerómetro (GY-521)
-| Pin Sensor | Pin STM32 |
-| :--- | :--- |
-| **SCL** | **PB6** |
-| **SDA** | **PB7** |
-| **VCC** | 5V |
-| **GND** | GND |
+### Acelerómetro GY-521 (I2C1)
 
-### Joystick
-| Pin Joystick | Pin STM32 |
-| :--- | :--- |
-| **VRx** / VRy | **PA0** |
-| **VCC** | 3.3V |
-| **GND** | GND |
+| Pin | STM32 |
+|-----|-------|
+| SCL | PB8 |
+| SDA | PB9 |
+
+### LED Blinky (Debug)
+
+| Función | Pin |
+|---------|-----|
+| LED | **PH1** |
+
+*Parpadea con Timer 11 para verificar que el sistema sigue corriendo.*
