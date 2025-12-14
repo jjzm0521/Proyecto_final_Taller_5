@@ -27,55 +27,132 @@ static uint8_t melodia_reproduciendo = 0;
 // Constante para cálculo de ARR (Timer clock / (PSC + 1))
 #define TIMER_FREQ_HZ 1000000 // 1 MHz después del prescaler
 
+// Definición de silencio
+#define REST 0
+
 // ============================================================================
-// MELODÍAS PREDEFINIDAS
+// STAR WARS MAIN THEME (frecuencias en Hz)
+// Tempo: 108 BPM -> wholenote = 2222ms
 // ============================================================================
 
-// Factor de escala para tempo (2 = más lento, 0.5 = más rápido)
-#define TEMPO_FACTOR 1
-
-// MELODIA_PONG_1 - 21 notas (duraciones x2)
 const Nota MELODIA_PONG_1[] = {
-    {391, 468 * TEMPO_FACTOR}, {440, 312 * TEMPO_FACTOR},
-    {523, 156 * TEMPO_FACTOR}, {493, 468 * TEMPO_FACTOR},
-    {391, 468 * TEMPO_FACTOR}, {523, 468 * TEMPO_FACTOR},
-    {587, 312 * TEMPO_FACTOR}, {698, 156 * TEMPO_FACTOR},
-    {659, 468 * TEMPO_FACTOR}, {587, 468 * TEMPO_FACTOR},
-    {622, 468 * TEMPO_FACTOR}, {587, 312 * TEMPO_FACTOR},
-    {523, 156 * TEMPO_FACTOR}, {466, 468 * TEMPO_FACTOR},
-    {622, 468 * TEMPO_FACTOR}, {932, 468 * TEMPO_FACTOR},
-    {783, 312 * TEMPO_FACTOR}, {622, 156 * TEMPO_FACTOR},
-    {587, 468 * TEMPO_FACTOR}, {783, 312 * TEMPO_FACTOR},
-    {659, 781 * TEMPO_FACTOR}};
-const uint16_t MELODIA_PONG_1_LEN = 21;
+    // Star Wars Main Theme - frecuencias en Hz, duraciones en ms
+    // Compás 1-2
+    {466, 277},
+    {466, 277},
+    {466, 277}, // AS4 x3
+    {698, 1111},
+    {1047, 1111}, // F5, C6
+    // Compás 3-4
+    {932, 277},
+    {880, 277},
+    {784, 277},
+    {1397, 1111},
+    {1047, 555},
+    {932, 277},
+    {880, 277},
+    {784, 277},
+    {1397, 1111},
+    {1047, 555},
+    // Compás 5-6
+    {932, 277},
+    {880, 277},
+    {932, 277},
+    {784, 1111},
+    {523, 277},
+    {523, 277},
+    {523, 277},
+    {698, 1111},
+    {1047, 1111},
+    // Compás 7-8
+    {932, 277},
+    {880, 277},
+    {784, 277},
+    {1397, 1111},
+    {1047, 555},
+    {932, 277},
+    {880, 277},
+    {784, 277},
+    {1397, 1111},
+    {1047, 555},
+    // Compás 9
+    {932, 277},
+    {880, 277},
+    {932, 277},
+    {784, 1111},
+    {523, 416},
+    {523, 138},
+    // Compás 10-11
+    {587, 833},
+    {587, 277},
+    {932, 277},
+    {880, 277},
+    {784, 277},
+    {698, 277},
+    {698, 277},
+    {784, 277},
+    {880, 277},
+    {784, 555},
+    {587, 277},
+    {659, 555},
+    {523, 416},
+    {523, 138},
+    // Compás 12
+    {587, 833},
+    {587, 277},
+    {932, 277},
+    {880, 277},
+    {784, 277},
+    {698, 277},
+    // Compás 13-14
+    {1047, 416},
+    {784, 138},
+    {784, 1111},
+    {REST, 277},
+    {523, 277},
+    {587, 833},
+    {587, 277},
+    {932, 277},
+    {880, 277},
+    {784, 277},
+    {698, 277},
+    // Compás 15
+    {698, 277},
+    {784, 277},
+    {880, 277},
+    {784, 555},
+    {587, 277},
+    {659, 555},
+    {1047, 416},
+    {1047, 138},
+    // Compás 16 (Final)
+    {1397, 555},
+    {1245, 277},
+    {1109, 555},
+    {1047, 277},
+    {932, 555},
+    {831, 277},
+    {784, 555},
+    {698, 277},
+    {1047, 2222} // C6 nota final
+};
+const uint16_t MELODIA_PONG_1_LEN = 71;
 
-// MELODIA_PONG_2 - 34 notas (duraciones x2)
+// Star Wars - versión corta (intro)
 const Nota MELODIA_PONG_2[] = {
-    {659, 312 * TEMPO_FACTOR}, {391, 156 * TEMPO_FACTOR},
-    {587, 312 * TEMPO_FACTOR}, {440, 156 * TEMPO_FACTOR},
-    {523, 312 * TEMPO_FACTOR}, {391, 156 * TEMPO_FACTOR},
-    {440, 312 * TEMPO_FACTOR}, {523, 156 * TEMPO_FACTOR},
-    {659, 312 * TEMPO_FACTOR}, {391, 156 * TEMPO_FACTOR},
-    {587, 312 * TEMPO_FACTOR}, {440, 156 * TEMPO_FACTOR},
-    {523, 312 * TEMPO_FACTOR}, {391, 156 * TEMPO_FACTOR},
-    {523, 312 * TEMPO_FACTOR}, {783, 156 * TEMPO_FACTOR},
-    {830, 312 * TEMPO_FACTOR}, {783, 156 * TEMPO_FACTOR},
-    {698, 312 * TEMPO_FACTOR}, {622, 156 * TEMPO_FACTOR},
-    {587, 312 * TEMPO_FACTOR}, {523, 156 * TEMPO_FACTOR},
-    {466, 312 * TEMPO_FACTOR}, {587, 156 * TEMPO_FACTOR},
-    {622, 312 * TEMPO_FACTOR}, {698, 156 * TEMPO_FACTOR},
-    {622, 312 * TEMPO_FACTOR}, {523, 156 * TEMPO_FACTOR},
-    {698, 156 * TEMPO_FACTOR}, {587, 156 * TEMPO_FACTOR},
-    {440, 156 * TEMPO_FACTOR}, {587, 156 * TEMPO_FACTOR},
-    {493, 156 * TEMPO_FACTOR}, {440, 781 * TEMPO_FACTOR}};
-const uint16_t MELODIA_PONG_2_LEN = 34;
+    {466, 277}, {466, 277}, {466, 277}, {698, 1111},  {1047, 1111},
+    {932, 277}, {880, 277}, {784, 277}, {1397, 1111}, {1047, 555},
+    {932, 277}, {880, 277}, {784, 277}, {1397, 1111}, {1047, 555},
+    {932, 277}, {880, 277}, {932, 277}, {784, 2222}};
+const uint16_t MELODIA_PONG_2_LEN = 20;
 
 // ============================================================================
 // FUNCIONES PRIVADAS
 // ============================================================================
 
 /**
- * @brief Configura el ARR y duty cycle para una frecuencia dada
+ * @brief Configura el ARR y duty cycle para una frecuencia Hz dada
+ * @param frecuencia Frecuencia en Hz (0 = silencio)
  */
 static void Buzzer_SetFrecuencia(uint16_t frecuencia) {
   if (buzzer_htim == NULL)
