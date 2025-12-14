@@ -511,7 +511,7 @@ void Galaga_Loop(void) {
   DrawScore();
 
   // Frame delay
-  HAL_Delay(GAME_DELAY);
+  HAL_Delay(GALAGA_GAME_DELAY);
 }
 
 // ============================================================================

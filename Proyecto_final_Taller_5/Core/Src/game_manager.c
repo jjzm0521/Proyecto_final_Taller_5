@@ -258,7 +258,7 @@ void GameManager_UpdateInputs(void) {
     // Disparar si el joystick se mueve fuera de la zona muerta
     // Mover hacia arriba (>2548) o hacia abajo (<1548) = disparar
     uint8_t fire_now =
-        (adc_value > ADC_FIRE_HIGH || adc_value < ADC_FIRE_LOW) ? 1 : 0;
+        (adc_value < ADC_FIRE_LOW || adc_value < ADC_FIRE_LOW) ? 1 : 0;
 
     // Solo disparar en flanco (evitar disparos repetidos)
     if (fire_now && !last_fire_state) {

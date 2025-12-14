@@ -37,8 +37,8 @@
 #define FORMATION_START_Y 60
 
 // Timing
-#define SHOOT_COOLDOWN 300 // ms between shots
-#define GAME_DELAY 20      // ms per frame
+#define SHOOT_COOLDOWN 300   // ms between shots
+#define GALAGA_GAME_DELAY 16 // ~60 FPS
 
 // ============================================================================
 // DATA STRUCTURES
